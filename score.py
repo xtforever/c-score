@@ -464,11 +464,16 @@ int chain(struct node *a, struct node *b) {
     print("selftest ok")
 
 
-if __name__ == '__main__':
-    if len(sys.argv) >= 2 and sys.argv[1] == '--selftest':
+def main(argv=None):
+    args = sys.argv if argv is None else argv
+    if len(args) >= 2 and args[1] == '--selftest':
         selftest()
-    elif len(sys.argv) == 2:
-        report(sys.argv[1])
+    elif len(args) == 2:
+        report(args[1])
     else:
         print(__doc__)
         sys.exit(1)
+
+
+if __name__ == '__main__':
+    main()
