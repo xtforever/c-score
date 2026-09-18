@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,13 +8,12 @@ version = "0.1.0"
 description = "Triage heuristic for C functions: flags review/refactoring candidates (nesting x pointer depth x deref chains)."
 readme = "README.md"
 requires-python = ">=3.8"
-license = { text = "MIT" }
+license = "MIT"
 keywords = ["c", "static-analysis", "code-quality", "refactoring", "triage"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: C",
     "Topic :: Software Development :: Quality Assurance",
-    "License :: OSI Approved :: MIT License",
 ]
 
 [project.scripts]
