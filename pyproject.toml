@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "c-code-score"
-version = "0.1.0"
+version = "0.1.1"
 description = "Triage heuristic for C functions: flags review/refactoring candidates (nesting x pointer depth x deref chains)."
 readme = "README.md"
 requires-python = ">=3.8"

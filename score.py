@@ -4,6 +4,8 @@ per C function.
 
 Usage:  score.py FILE.c
         score.py --selftest
+        score.py --version
+        score.py --help
 
 For every function found it prints the c(i) nesting histogram, the p(k)
 pointer-indirection histogram, the d(j) dereference histogram, the three
@@ -30,6 +32,12 @@ d(j) = number of `->` dereferences at chain position j, for j >= 2 only. A
 """
 
 import sys
+
+try:
+    from importlib.metadata import version as _dist_version
+    __version__ = _dist_version("c-code-score")
+except Exception:  # running standalone from source, not installed
+    __version__ = "unknown"
 
 KEYWORDS = frozenset("""
 auto break case char const continue default do double else enum extern float
@@ -468,6 +476,10 @@ def main(argv=None):
     args = sys.argv if argv is None else argv
     if len(args) >= 2 and args[1] == '--selftest':
         selftest()
+    elif len(args) == 2 and args[1] in ('-h', '--help'):
+        print(__doc__)
+    elif len(args) == 2 and args[1] == '--version':
+        print(f"c-score {__version__}")
     elif len(args) == 2:
         report(args[1])
     else:
