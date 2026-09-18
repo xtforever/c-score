@@ -30,6 +30,34 @@ function with a single number
 >
 > Disclaimer: my idea; I used DeepSeek V4 Pro to help write the Python and this post.
 
+## Reddit — r/C_Programming (no repo link)
+
+Variant that avoids the git-link bot filter (drop the link from the post, share it
+only in a comment when asked).
+
+**Title:** After 40 years of C, I wrote a triage tool that scores every C function with one number
+
+> score(f) = nesting × pointer depth × deref chain
+>
+> Each factor is one sentence:
+> - **nesting** — depth of `if`/`for`/`while` levels
+> - **pointer depth** — `int *`, `int **`, `int ***` in params/locals (deeper = closer to a memory bug)
+> - **deref chain** — `a->b->c` runs, i.e. null-derefs where the middle pointer came from somewhere else
+>
+> No parser, no dependencies, one file.
+>
+> I tested it on two very different codebases — a 40-year-old X11 toolkit (libXt) and a format parser (libtiff) — and correlated the score against maintenance churn (how often a function gets touched):
+>
+> - Spearman(Score, Churn): 0.52 (libXt), 0.38 (libtiff)
+> - vs. NLOC: 0.50 / 0.33, vs. cyclomatic complexity: 0.41 / 0.32
+> - the top-15 functions see ~3–5× the churn of the bottom-15
+>
+> It's a triage tool, not a bug detector — it won't find semantic bugs, and it's not a quality gate. But "read the top 15, skip the rest" beats reading the whole file.
+>
+> It's on PyPI: `pip install c-code-score`, then `c-score file.c`. Happy to drop the link if anyone wants to look at the code.
+>
+> Disclaimer: my idea; I used DeepSeek V4 Pro to help write the Python and this post.
+
 ## X/Twitter — thread
 
 1. A C function is worth a second look when it's deeply nested, juggles pointers-of-pointers, and chases `a->b->c`. I turned that intuition into one number.
