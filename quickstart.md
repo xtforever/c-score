@@ -29,7 +29,9 @@ parse_list (line 147)
 ## Top-N über mehrere Dateien
 
 ```sh
-for f in lib/*.c; do python3 score.py "$f"; done | grep 'score:' | sort -t: -k2 -rn | head
+for f in lib/*.c; do python3 score.py "$f"; done \
+  | awk '/^[^ ]/ {name=$1} /^  score:/ {print name, $2}' \
+  | sort -k2 -rn | head
 ```
 
-(Die Funktionsnamen stehen im Block direkt über der `score:`-Zeile.)
+Ausgabe: `funktionsname score`, absteigend sortiert.
