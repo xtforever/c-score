@@ -3,7 +3,7 @@ requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "c-score"
+name = "c-code-score"
 version = "0.1.0"
 description = "Triage heuristic for C functions: flags review/refactoring candidates (nesting x pointer depth x deref chains)."
 readme = "README.md"
