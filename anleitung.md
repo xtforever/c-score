@@ -11,7 +11,7 @@ Faktoren:
 
 | Faktor | Was es zählt | Intuition |
 |---|---|---|
-| `c(i)` | Statements auf Brace-Tiefe `i` | Tiefe Verschachtelung belastet das Arbeitsgedächtnis |
+| `c(i)` | Statements auf Brace-Tiefe `i` | Tiefe `if`/`for`/`while`-Ebenen |
 | `p(k)` | Zeiger mit Indirektion `k` (`int *` = 1, `int **` = 2) in Parametern + Locals | Tiefe Zeiger = Nähe zum Memory-Bug |
 | `d(j)` | `->`-Kettenposition `j` ≥ 2 | `a->b->c` dereferenziert einen Zeiger, der von woanders kommt |
 

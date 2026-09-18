@@ -8,7 +8,7 @@ Blick** — ohne Parser, ohne Dependencies, ohne Setup.
 
     score(f) = Verschachtelung × Zeiger-Tiefe × Deref-Kette
 
-- **Verschachtelung** misst die Arbeitsgedächtnis-Last tiefer `if`/`for`/`while`-Ebenen.
+- **Verschachtelung** misst die Tiefe der `if`/`for`/`while`-Ebenen.
 - **Zeiger-Tiefe** zählt `int *`, `int **`, `int ***` in Parametern und Locals — je tiefer, desto näher am Memory-Bug.
 - **Deref-Kette** zählt `a->b->c`-Ketten, also Null-Derefs, wo der Zwischen-Zeiger von woanders kommt.
 
