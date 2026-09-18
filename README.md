@@ -10,6 +10,11 @@ Auf zwei sehr unterschiedlichen Codebasen (libXt, libtiff) ranket der Score
 die Funktionen mit dem höchsten Wartungs-Churn besser als Zeilenzahl oder
 zyklomatische Komplexität. Es ist ein Triage-Werkzeug, kein Bug-Detektor.
 
+Bei KI-gestützter C-Entwicklung ist c-code-score ein nützliches Hilfsmittel:
+Das Modell bekommt mit dem Score direktes Feedback zu jeder Funktion und kann
+so verschachtelten, zeigerlastigen Code vermeiden — es erzeugt von sich aus
+besser wartbaren Code.
+
 ## Dateien
 
 - [quickstart.md](quickstart.md) — in 30 Sekunden loslegen
