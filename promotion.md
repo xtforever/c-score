@@ -76,3 +76,66 @@ only in a comment when asked).
 > The loop: generate → `c-score file.c` → "rewrite the top 3" → re-score.
 > One round visibly flattens the code. `pip install c-code-score`
 > https://github.com/xtforever/c-score
+
+## dev.to — long-form
+
+**Title:** A one-number triage tool for C code (and a cheap feedback loop for LLM output)
+
+C gets hard to trust in three predictable ways: deep nesting, pointers to
+pointers, and `a->b->c` chains where nobody null-checks the middle pointer.
+So I wrote a tiny scorer that squashes that into one number per function:
+
+```
+score(f) = nesting × pointer depth × deref chain
+```
+
+Each factor is one sentence:
+
+- **nesting** — the depth of `if`/`for`/`while` levels
+- **pointer depth** — `int *`, `int **`, `int ***` in params and locals (deeper is closer to a memory bug)
+- **deref chain** — `a->b->c` runs, i.e. null-derefs where the middle pointer came from somewhere else
+
+It's one file, zero dependencies, no parser worth mentioning.
+
+### Does the number mean anything?
+
+I checked it against maintenance churn — how often a function actually gets
+touched — on two very different codebases (libXt, a 40-year-old X11 toolkit,
+and libtiff, a format parser):
+
+- Spearman(Score, Churn) = 0.52 (libXt), 0.38 (libtiff)
+- better than raw line count (0.50 / 0.33) and cyclomatic complexity (0.41 / 0.32)
+- the top-15 functions see roughly 3–5× the churn of the bottom-15
+
+I also ran it across 20+ years of git history for libtiff, curl, redis and
+OpenMotif. None of them trend toward smaller functions — the median stays flat
+and the biggest function only ever grows. Which is exactly why a cheap pointer
+to the hot spots helps.
+
+### The part I actually use it for
+
+LLM-generated C has the same tell. The loop is:
+
+```
+generate → c-score file.c → "rewrite the top 3" → re-score
+```
+
+One round visibly flattens the output. A dumb, explainable number is enough to
+steer an LLM — you don't need a real static analyzer for this.
+
+### Honest limits
+
+It's a triage tool, not a bug detector. It won't find semantic bugs, and it
+can't see a deep call stack full of side effects. The parser is not perfect,
+and the Python is LLM-generated too. But the idea is the sound part — before
+you pick it apart, run it on a real codebase.
+
+```
+pip install c-code-score
+for f in src/*.c; do c-score "$f"; done \
+  | awk '/^[^ ]/{n=$1} /^  score:/{print n,$2}' \
+  | sort -k2 -rn | head
+```
+
+Repo: https://github.com/xtforever/c-score · https://codeberg.org/au1064/c-score
+

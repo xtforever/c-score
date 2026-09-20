@@ -19,5 +19,9 @@ classifiers = [
 [project.scripts]
 c-score = "score:main"
 
+[project.urls]
+Homepage = "https://codeberg.org/au1064/c-score"
+Repository = "https://github.com/xtforever/c-score"
+
 [tool.setuptools]
 py-modules = ["score"]
