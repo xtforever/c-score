@@ -2,7 +2,8 @@
 """score.py: compute the "nesting + pointer indirection + dereference" metric
 per C function.
 
-Usage:  score.py FILE.c
+Usage:  score.py FILE.c [FILE.c ...]
+        score.py DIR            # all *.c in DIR, plus summary
         score.py --selftest
         score.py --version
         score.py --help
@@ -31,6 +32,9 @@ d(j) = number of `->` dereferences at chain position j, for j >= 2 only. A
        isolated `a->x` dereferences are ignored entirely.
 """
 
+import glob
+import os
+import statistics
 import sys
 
 try:
@@ -363,9 +367,11 @@ def report(path):
     funcs = find_functions(tokenize(src))
     if not funcs:
         print("no functions found")
-        return
+        return []
+    scores = []
     for name, ln, ptoks, btoks in funcs:
         c, p, d, sp, pp, dp, score = metric(name, ln, ptoks, btoks)
+        scores.append((name, ln, score))
         print(f"{name} (line {ln})")
         print(f"  c(i): {dict(sorted(c.items())) if c else {}}")
         print(f"  p(k): {dict(sorted(p.items())) if p else {}}")
@@ -375,6 +381,30 @@ def report(path):
         print(f"  deref term:   {fmt_p(d)} = {dp}")
         print(f"  score: {score}")
         print()
+    return scores
+
+
+def expand_paths(args):
+    """File arguments pass through; directory arguments expand to *.c."""
+    paths = []
+    for a in args:
+        if os.path.isdir(a):
+            paths.extend(sorted(glob.glob(os.path.join(a, '*.c'))))
+        else:
+            paths.append(a)
+    return paths
+
+
+def summarize(scores):
+    """scores: list of (path, name, score). Prints median and max."""
+    if not scores:
+        return
+    vals = [s for _, _, s in scores]
+    path, name, mx = max(scores, key=lambda t: t[2])
+    print("summary:")
+    print(f"  functions: {len(vals)}")
+    print(f"  median: {statistics.median(vals):g}")
+    print(f"  max: {mx} ({name} in {path})")
 
 
 SAMPLE = r"""
@@ -480,8 +510,13 @@ def main(argv=None):
         print(__doc__)
     elif len(args) == 2 and args[1] == '--version':
         print(f"c-score {__version__}")
-    elif len(args) == 2:
-        report(args[1])
+    elif len(args) >= 2:
+        paths = expand_paths(args[1:])
+        all_scores = []
+        for p in paths:
+            all_scores.extend((p, n, s) for n, _, s in report(p))
+        if len(paths) > 1:
+            summarize(all_scores)
     else:
         print(__doc__)
         sys.exit(1)
